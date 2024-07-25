@@ -19,6 +19,8 @@ fun createTaskFinal(alltasks : ObservableList<TaskDO>, appViewmodel: AppViewmode
         task.successeurs = FXCollections.observableArrayList(appViewmodel.taskFnal)
     }
     calculateTempsPlusTot(appViewmodel.taskFnal)
+    appViewmodel.taskList.add(appViewmodel.taskFnal)
+    appViewmodel.taskFnal.tempsPlusTard = appViewmodel.taskFnal.tempsPlusTot
 
     println("Tache FINAL : ")
     println(" Designation ${appViewmodel.taskFnal.designation}")

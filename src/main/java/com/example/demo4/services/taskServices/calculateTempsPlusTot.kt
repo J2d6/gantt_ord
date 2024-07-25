@@ -16,31 +16,28 @@ fun calculateTempsPlusTot(taskDO: TaskDO) {
     }
 
 }
-fun calculateTempsPlusTard(taskDO: TaskDO) {
+fun calculateTempsPlusTard(taskDO : TaskDO) {
+    val tempsPlusTardSucceurs : ObservableList<Int> = FXCollections.observableArrayList()
 
-
-    if(!taskDO.antecedents.isEmpty()) {
-        if(taskDO.successeurs.isEmpty()) {
-            // FIN
-            taskDO.tempsPlusTard = taskDO.tempsPlusTot
-        } else {
-            // alai
-        }
+    for (succ in taskDO.successeurs) {
+        tempsPlusTardSucceurs.add(succ.tempsPlusTard- taskDO.duree)
     }
-    var tempsPluTardSuccesseur: ObservableList<Int> = FXCollections.observableArrayList()
-
-    if (taskDO.successeurs.isEmpty()) {
-        taskDO.tempsPlusTard = taskDO.tempsPlusTot
-    } else {
-        for (successeur in taskDO.successeurs) {
-            tempsPluTardSuccesseur.add(successeur.tempsPlusTard)
-        }
-        var minTempsPlusTotSuccesseurs : Int =  tempsPluTardSuccesseur.min()
-
-        taskDO.tempsPlusTard = minTempsPlusTotSuccesseurs-taskDO.duree
-    }
-
+    taskDO.tempsPlusTard = tempsPlusTardSucceurs.min()
     for (ant in taskDO.antecedents) {
         calculateTempsPlusTard(ant)
     }
+
+//    for (task in taskDOList) {
+//        if(task.successeurs.isEmpty()) {
+//            // task == FIN
+//            task.tempsPlusTard = task.tempsPlusTot
+//        } else {
+//            var tempsPluTardListSuccesseur: ObservableList<Int> = FXCollections.observableArrayList()
+//            for (succ in task.successeurs) {
+//                tempsPluTardListSuccesseur.add(succ.tempsPlusTard)
+//            }
+//            task.tempsPlusTard = tempsPluTardListSuccesseur.min() - task.duree
+//        }
+//    }
+
 }
