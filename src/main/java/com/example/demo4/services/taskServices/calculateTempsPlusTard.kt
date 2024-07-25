@@ -14,14 +14,16 @@ fun createTaskFinal(alltasks : ObservableList<TaskDO>, appViewmodel: AppViewmode
             allTaskAvantFin.add( task )
         }
     }
-    appViewmodel.taskFnal.antecedents = allTaskAvantFin
+    appViewmodel.taskDOFin.antecedents = allTaskAvantFin
     for (task in allTaskAvantFin) {
-        task.successeurs = FXCollections.observableArrayList(appViewmodel.taskFnal)
+        task.successeurs = FXCollections.observableArrayList(appViewmodel.taskDOFin)
     }
-    calculateTempsPlusTot(appViewmodel.taskFnal)
-
-    println("Tache FINAL : ")
-    println(" Designation ${appViewmodel.taskFnal.designation}")
-    println(" Temps plus tôt : ${appViewmodel.taskFnal.tempsPlusTot}")
+    calculateTempsPlusTot(appViewmodel.taskDOFin)
+    appViewmodel.taskList.add(appViewmodel.taskDOFin)
+    appViewmodel.taskDOFin.tempsPlusTard = appViewmodel.taskDOFin.tempsPlusTot
+//
+//    println("Tache FINAL : ")
+//    println(" Designation ${appViewmodel.taskDOFin.designation}")
+//    println(" Temps plus tôt : ${appViewmodel.taskDOFin.tempsPlusTot}")
 
 }

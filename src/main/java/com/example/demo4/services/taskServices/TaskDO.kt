@@ -11,9 +11,16 @@ class TaskDO (
     var successeurs : ObservableList<TaskDO> = FXCollections.observableArrayList()
     var tempsPlusTot : Int = 0
     var tempsPlusTard : Int = 0
+    var margeLibre : Int = 0
+    var margeTotale : Int = 0
 
 
-    fun toDTO() {
+    fun allSuccesseurs() : String {
+        var allSuccesseursDesignation : String = " "
+        for (task in this.successeurs) {
+            allSuccesseursDesignation += " ${task.designation}, "
 
+        }
+        return allSuccesseursDesignation
     }
 }

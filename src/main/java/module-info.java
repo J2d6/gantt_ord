@@ -5,5 +5,6 @@ module com.example.demo4 {
 
 
     opens com.example.demo4 to javafx.fxml;
+    opens com.example.demo4.services.taskServices to javafx.base;
     exports com.example.demo4;
 }

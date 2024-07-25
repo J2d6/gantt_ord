@@ -2,6 +2,8 @@ package com.example.demo4.ui.components
 
 import com.example.demo4.data.AppViewmodel
 import com.example.demo4.services.taskServices.TaskDO
+import com.example.demo4.services.taskServices.createTableView
+import com.example.demo4.utilities.criticTasksContainer
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -14,6 +16,7 @@ import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
+import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.stage.Screen
 
@@ -128,28 +131,32 @@ class GanttChart(
     }
 
     fun cheminCritique() = VBox().apply {
-        val taskCritique : ObservableList<String> = FXCollections.observableArrayList("DEBUT -> ")
-        createCheminCritique(taskCritique)
-        var critiqueString  = ""
-        for (design in taskCritique) {
-            critiqueString += design
-        }
-
         alignment = Pos.CENTER
+
+        // Chemin critique
+        val taskCritiqueDesignation : ObservableList<String> = FXCollections.observableArrayList()
+        createCheminCritique(taskCritiqueDesignation)
         children += Label().apply {
-            text = "CHEMIN CRITIQUE : $critiqueString"
+            text = "CHEMIN CRITIQUE"
         }
-        children += HBox().apply {
-            alignment = Pos.CENTER_RIGHT
-            children += Button("Afficher les marges")
+        val criticTaskContainer = criticTasksContainer(taskCritiqueDesignation)
+        children += criticTaskContainer
+        // marges
+        val margesTable = createTableView(FXCollections.observableArrayList(appViewmodel.taskList))
+        val tableContainer = VBox().apply {
+            children += StackPane().apply {
+                children += Label("MARGES LIBRES ET MARGES TOTALES")
+            }
+            children += margesTable
         }
+        children += tableContainer
 
     }
 
     private fun createCheminCritique( taskDesignInCheminCritique : ObservableList<String>) {
         for (task in appViewmodel.taskList) {
             if (task.tempsPlusTot == task.tempsPlusTard) {
-                taskDesignInCheminCritique.add("${task.designation} -> ")
+                taskDesignInCheminCritique.add("${task.designation}")
             }
         }
     }

@@ -3,44 +3,45 @@ package com.example.demo4.services.taskServices
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 
-fun calculateTempsPlusTot(taskDO: TaskDO) {
-    var tempsPlutotAntecedent: ObservableList<Int> = FXCollections.observableArrayList()
+fun calculateTempsPlusTot(debut: TaskDO) {
+    println("IN CALCUL PLUS TOT")
+    fun dfs(tache: TaskDO) {
+        if (!tache.successeurs.isEmpty()) {
+            for (tacheSuperieure in tache.successeurs) {
+                println("tache en cours : ${tacheSuperieure.designation}")
+                val nouvelleDateAuPlusTot = tache.tempsPlusTot + tache.duree
+                if (nouvelleDateAuPlusTot > tacheSuperieure.tempsPlusTot) {
+                    tacheSuperieure.tempsPlusTot = nouvelleDateAuPlusTot
+                }
+                dfs(tacheSuperieure)
+            }
+        }
 
-    for (antecedent in taskDO.antecedents) {
-        tempsPlutotAntecedent.add(antecedent.tempsPlusTot+antecedent.duree)
     }
-    taskDO.tempsPlusTot = tempsPlutotAntecedent.maxOrNull() ?: 0
 
-    for (successeur in taskDO.successeurs) {
-        calculateTempsPlusTot(successeur)
-    }
-
+    debut.tempsPlusTot = 0
+    dfs(debut)
 }
-fun calculateTempsPlusTard(taskDO: TaskDO) {
-
-
-    if(!taskDO.antecedents.isEmpty()) {
-        if(taskDO.successeurs.isEmpty()) {
-            // FIN
-            taskDO.tempsPlusTard = taskDO.tempsPlusTot
-        } else {
-            // alai
+fun calculateTempsPlusTard(fin: TaskDO) {
+    println("IN CALCUL PLUS TARD")
+    fun dfs(tache: TaskDO) {
+        for (tacheAnterieure in tache.antecedents) {
+            val nouvelleDateAuPlusTard = tache.tempsPlusTard - tacheAnterieure.duree
+            if (tacheAnterieure.tempsPlusTard == 0) {
+                if(tacheAnterieure.designation != "DEBUT") {
+                    tacheAnterieure.tempsPlusTard = nouvelleDateAuPlusTard
+                }
+            } else {
+                if (nouvelleDateAuPlusTard < tacheAnterieure.tempsPlusTard) {
+                    tacheAnterieure.tempsPlusTard = nouvelleDateAuPlusTard
+                }
+            }
+            dfs(tacheAnterieure)
         }
     }
-    var tempsPluTardSuccesseur: ObservableList<Int> = FXCollections.observableArrayList()
 
-    if (taskDO.successeurs.isEmpty()) {
-        taskDO.tempsPlusTard = taskDO.tempsPlusTot
-    } else {
-        for (successeur in taskDO.successeurs) {
-            tempsPluTardSuccesseur.add(successeur.tempsPlusTard)
-        }
-        var minTempsPlusTotSuccesseurs : Int =  tempsPluTardSuccesseur.min()
-
-        taskDO.tempsPlusTard = minTempsPlusTotSuccesseurs-taskDO.duree
-    }
-
-    for (ant in taskDO.antecedents) {
-        calculateTempsPlusTard(ant)
-    }
+    fin.tempsPlusTard = fin.tempsPlusTot
+    dfs(fin)
 }
+
+

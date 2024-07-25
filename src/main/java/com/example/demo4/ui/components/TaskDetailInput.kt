@@ -1,10 +1,7 @@
 package com.example.demo4.ui.components
 
 import com.example.demo4.data.AppViewmodel
-import com.example.demo4.services.taskServices.TaskDO
-import com.example.demo4.services.taskServices.calculateTempsPlusTard
-import com.example.demo4.services.taskServices.calculateTempsPlusTot
-import com.example.demo4.services.taskServices.createTaskFinal
+import com.example.demo4.services.taskServices.*
 import com.example.demo4.utilities.generateAntecedantTasks
 import com.example.demo4.utilities.generateUppercaseLetters
 import javafx.beans.property.BooleanProperty
@@ -161,17 +158,48 @@ class TaskDetailInput(
     }
 
     fun ordonnancer() {
-        calculateTempsPlusTot(appViewmodel.taskDODebut)
-        createTaskFinal(antecedentList, appViewmodel)
-        calculateTempsPlusTard(appViewmodel.taskFnal)
         appViewmodel.taskList = antecedentList
-        for (task in antecedentList) {
-            println("Tache : ${task.designation}")
-            println("Duree : ${task.duree}")
-            println("Temps plus tot : ${task.tempsPlusTot}")
-            println("Temps plus tard : ${task.tempsPlusTard}")
+        createTaskFinal(antecedentList, appViewmodel)
+        calculateTempsPlusTot(appViewmodel.taskDODebut)
+
+        calculateTempsPlusTard(appViewmodel.taskDOFin)
+        for (task in appViewmodel.taskList) {
+            println("${task.designation} (${task.duree}, ${task.tempsPlusTot}, ${task.tempsPlusTard}): ${task.allSuccesseurs()}")
         }
+        calculerMarges(appViewmodel.taskList)
+        //afficherGraphe(appViewmodel.taskDODebut)
+//        for (task in antecedentList) {
+//            println("Tache : ${task.designation}")
+//            println("Duree : ${task.duree}")
+//            println("Temps plus tot : ${task.tempsPlusTot}")
+//            println("Temps plus tard : ${task.tempsPlusTard}")
+//
+//        }
+            // naviguer vers la nouvele page
         navigationButtonAction(null)
     }
+
+    fun afficherGraphe(debut: TaskDO) {
+        val visitees = mutableSetOf<TaskDO>()
+        fun dfs(tache: TaskDO, prefix: String) {
+            if (tache in visitees) return
+            visitees.add(tache)
+
+            println(prefix + tache.designation)
+            val taille = tache.successeurs.size
+            tache.successeurs.forEachIndexed { index, tacheSuccesseur ->
+                val isLast = index == taille - 1
+                val nouveauPrefix = if (isLast) {
+                    prefix + "    └── "
+                } else {
+                    prefix + "    ├── "
+                }
+                dfs(tacheSuccesseur, nouveauPrefix)
+            }
+        }
+
+        dfs(debut, "")
+    }
+
 
 }

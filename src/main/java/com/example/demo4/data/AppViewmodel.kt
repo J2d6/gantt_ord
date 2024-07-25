@@ -9,7 +9,7 @@ class AppViewmodel {
     var taskList : ObservableList<TaskDO> = FXCollections.observableArrayList()
     val nbTaskProperty = SimpleIntegerProperty(this, "nbTask", 0)
     var taskDODebut : TaskDO = TaskDO(0, "DEBUT")
-    var taskFnal : TaskDO = TaskDO(0, "FIN")
+    var taskDOFin : TaskDO = TaskDO(0, "FIN")
     var taskDesigantionList : ObservableList<String> = FXCollections.observableArrayList()
 
     var nbTask: Int
